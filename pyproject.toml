@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sim-plugin-isaac"
+version = "0.1.0"
+description = "Isaac Sim driver for sim (v1: one-shot subprocess)."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [{ name = "Weiqi Ji", email = "jiweiqi10@gmail.com" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+    "sim-runtime @ git+https://github.com/svd-ai-lab/sim-cli@v0.2.4",
+    # TODO(reviewer): pin the isaac SDK here, e.g. "isaac>=X.Y"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7",
+    "build>=1.0",
+]
+
+[project.entry-points."sim.drivers"]
+isaac = "sim_plugin_isaac:IsaacDriver"
+
+[project.entry-points."sim.skills"]
+isaac = "sim_plugin_isaac:skills_dir"
+
+[project.entry-points."sim.plugins"]
+isaac = "sim_plugin_isaac:plugin_info"
+
+[project.urls]
+Homepage = "https://github.com/svd-ai-lab/sim-plugin-isaac"
+Issues = "https://github.com/svd-ai-lab/sim-plugin-isaac/issues"
+
+[tool.hatch.metadata]
+# Required because `sim-runtime` is pinned to a git+https URL — sim-cli is
+# distributed via GitHub, not PyPI. See sim-proj memory: plugin distribution
+# is GitHub-only.
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sim_plugin_isaac"]
